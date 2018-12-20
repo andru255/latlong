@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>latlong</title> 
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+        <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+        <link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+        <link href='style.css' rel='stylesheet' />
+    </head>
+    <body>
+        <header>
+            <div id="coordinates">
+                <form class="pure-form">
+                    <fieldset>
+                        <legend>Coordinate</legend>
+                        <label for="latitude">Latitude</label>
+                        <input id="txtLatitude" placeholder="Latitude" readonly>
+
+                        <label for="longitude">Longitude</label>
+                        <input id="txtLongitude" placeholder="Longitude" readonly>
+
+                        <a href="#" id="lnkReset">reset</a>
+
+                    </fieldset>
+                    <fieldset>
+                        <legend>Get position</legend>
+                        <label for="drag">Drag marker <input type="radio" name="radioModes[]" id="drag"></label>
+                        <label for="changeByText">Edit coordinate <input type="radio" name="radioModes[]" id="changeByText"></label>
+                    </fieldset>
+                </form>
+            </div>
+        </header>
+        <main>
+            <div id="map"></canvas>
+        </main>
+        <script src="index.js"></script>
+    </body>
+</html>
