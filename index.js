@@ -37,9 +37,9 @@ function doReset(evt) {
     evt.preventDefault();
 }
 
-function doMarkerOnDragEnd() {
+function onMarkerDragEnd() {
     var lngLat = marker.getLatLng();
-    coordinatesSetup([lngLat.lng, lngLat.lat]);
+    coordinatesSetup([lngLat.lat, lngLat.lng]);
 }
 
 function doChangeMode() {
@@ -66,7 +66,7 @@ function doUpdatePositionByTextEditing() {
 window.onload = function() {
     mapBoxSetup();
     coordinatesSetup(defaultCoord);
-    marker.on("dragend", doMarkerOnDragEnd);
+    marker.on("dragend", onMarkerDragEnd);
 
     // for reset
     lnkReset.addEventListener("click", doReset);
