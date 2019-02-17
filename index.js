@@ -8,6 +8,12 @@ var lnkReset = document.getElementById("lnkReset");
 // get radios
 var radioModes = document.getElementsByName("radioModes[]");
 
+// get mode by browser
+var lnkGetPositionByBrowser = document.getElementById("lnkGetPositionbyBrowser");
+
+// message container
+var containerMessage = document.getElementById("messages");
+
 // setup mapbox
 var defaultCoord = [40, -74.50];
 L.mapbox.accessToken = "pk.eyJ1IjoiYW5kcnUyNTUiLCJhIjoiY2pwdzR0ZGRiMHlvOTQ4bnR2OG9lbTNhNSJ9.isi3uGKrTkISJMlnS2T1bw";
@@ -30,10 +36,10 @@ function coordinatesSetup(coordinate) {
 }
 
 // Events
-function doReset(evt) {
+function makeReset(evt) {
     coordinatesSetup(defaultCoord);
     marker.setLatLng(defaultCoord);
-    map.setView(defaultCoord);
+    map.setView(defaultCoord, 9);
     evt.preventDefault();
 }
 
@@ -42,7 +48,7 @@ function onMarkerDragEnd() {
     coordinatesSetup([lngLat.lat, lngLat.lng]);
 }
 
-function doChangeMode() {
+function makeChangeMode() {
     txtLat.readOnly = (this.id == "drag") ? true : false;
     txtLon.readOnly = (this.id == "drag") ? true : false;
 
@@ -54,7 +60,7 @@ function doChangeMode() {
     marker.dragging.enable();
 }
 
-function doUpdatePositionByTextEditing() {
+function makeUpdatePositionByTextEditing() {
     if (this.readOnly) {
         return;
     }
@@ -63,21 +69,55 @@ function doUpdatePositionByTextEditing() {
     marker.setLatLng(coordinate);
 }
 
+function makeUpdatePositionByBrowser(evt) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        var coords = position.coords;
+        var latitude = coords.latitude;
+        var longitude = coords.longitude;
+        var coord = [latitude, longitude];
+        coordinatesSetup(coord);
+        marker.setLatLng(coord);
+        map.setView(coord);
+    }, function() {
+        showMessage("Please enable your geolocation feature");
+    });
+    evt.preventDefault();
+}
+
+function showMessage(text, timeout) {
+    var validTimeout = timeout || 4;
+    var childElement = document.createElement("div");
+    childElement.className = "message";
+    childElement.innerHTML = ["<p>", text ,"</p>"].join(" ");
+    containerMessage.appendChild(childElement);
+    var timer = setTimeout(() => {
+        childElement.className += " slideup";
+        childElement.remove();
+    }, 1000 * validTimeout);
+}
+
 window.onload = function() {
     mapBoxSetup();
     coordinatesSetup(defaultCoord);
     marker.on("dragend", onMarkerDragEnd);
 
     // for reset
-    lnkReset.addEventListener("click", doReset);
+    lnkReset.addEventListener("click", makeReset);
 
     // switching modes
     radioModes[0].checked = true;
     radioModes.forEach(function(radio){
-        radio.addEventListener("click", doChangeMode);
+        radio.addEventListener("click", makeChangeMode);
     });
 
+    // for geolocation by browser
+    lnkGetPositionByBrowser.style.display = "none";
+    if ("geolocation" in navigator) {
+        lnkGetPositionByBrowser.style.display = "inline-block";
+        lnkGetPositionByBrowser.addEventListener("click", makeUpdatePositionByBrowser);
+    }
+
     // adding events for inputs
-    txtLat.addEventListener("keyup", doUpdatePositionByTextEditing);
-    txtLon.addEventListener("keyup", doUpdatePositionByTextEditing);
+    txtLat.addEventListener("keyup", makeUpdatePositionByTextEditing);
+    txtLon.addEventListener("keyup", makeUpdatePositionByTextEditing);
 };

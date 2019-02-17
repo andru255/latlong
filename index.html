@@ -21,14 +21,17 @@
                         <input id="txtLongitude" placeholder="Longitude" readonly>
 
                         <a href="#" id="lnkReset">reset</a>
-
                     </fieldset>
                     <fieldset>
                         <legend>Get position</legend>
                         <label for="drag">Drag marker <input type="radio" name="radioModes[]" id="drag"></label>
+                        |
                         <label for="changeByText">Edit coordinate <input type="radio" name="radioModes[]" id="changeByText"></label>
+                        |
+                        <a href="#" id="lnkGetPositionbyBrowser">By browser</a>
                     </fieldset>
                 </form>
+                <div id="messages"></div>
             </div>
         </header>
         <main>
